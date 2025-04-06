@@ -53,3 +53,43 @@ void loop() {
 }
 ```
 In my case, the monitor constantly return the value "high" for the center button. I think the center button is broken. Otherwise, all the other button are working.
+
+This code make the stepper motor rotate : 
+```
+#include <Stepper.h>
+
+// Définir les broches de contrôle pour le moteur
+const int motorPin1 = 8;  // IN1
+const int motorPin2 = 9;  // IN2
+const int motorPin3 = 10; // IN3
+const int motorPin4 = 11; // IN4
+
+// Définir le nombre de pas par révolution (2048 pas pour le moteur 28BYJ-48)
+const int stepsPerRevolution = 2048;
+
+// Créer un objet "stepper" de la classe Stepper
+// Le moteur utilise 4 broches (IN1, IN2, IN3, IN4)
+Stepper myStepper(stepsPerRevolution, motorPin1, motorPin2, motorPin3, motorPin4);
+
+void setup() {
+  // Initialiser la vitesse du moteur
+  myStepper.setSpeed(5);  // Définir la vitesse du moteur (15 RPM dans cet exemple)
+
+  // Afficher un message dans le moniteur série pour indiquer que le programme commence
+  Serial.begin(9600);
+  Serial.println("Moteur en fonctionnement...");
+}
+
+void loop() {
+  // Faire tourner le moteur d'un tour complet dans un sens (horaire)
+  Serial.println("Tour horaire");
+  myStepper.step(stepsPerRevolution);
+  delay(1000);  // Pause d'une seconde
+
+  // Faire tourner le moteur d'un tour complet dans l'autre sens (antihoraire)
+  Serial.println("Tour antihoraire");
+  myStepper.step(-stepsPerRevolution);
+  delay(1000);  // Pause d'une seconde
+}
+```
+For me, the motor only turn in one way.
