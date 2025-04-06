@@ -51,4 +51,5 @@ void loop() {
 
   delay(200);
 }
+```
 In my case, the monitor constantly return the value "high" for the center button. I think the center button is broken. Otherwise, all the other button are working.
