@@ -1,4 +1,5 @@
 # vehicle_mechatronics
+This code enables to see if the buttons work
 ```
 // Définir les broches pour les boutons du joystick
 const int joyUpPin = 2;    // Broche pour le bouton UP
@@ -50,4 +51,4 @@ void loop() {
 
   delay(200);
 }
-
+In my case, the monitor constantly return the value "high" for the center button. I think the center button is broken. Otherwise, all the other button are working.
