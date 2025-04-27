@@ -158,3 +158,87 @@ void loop() {
   }
 }
 ````
+Now code with perpetual movement :
+````
+#include <Stepper.h>
+
+// Nombre de pas pour une révolution complète
+const int stepsPerRevolution = 2048;
+
+// Définir les pins du moteur (IN1-IN2-IN3-IN4)
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
+
+// Définir les pins des boutons
+const int buttonUp = 2;
+const int buttonDown = 3;
+const int buttonLeft = 4;
+const int buttonRight = 5;
+const int buttonReset = 6;
+
+int motorSpeed = 10;      // Vitesse initiale (en RPM)
+int motorDirection = 0;   // 0 = arrêté, 1 = droite, -1 = gauche
+
+void setup() {
+  // Initialisation du moteur
+  myStepper.setSpeed(motorSpeed);
+
+  // Initialisation des boutons
+  pinMode(buttonUp, INPUT_PULLUP);
+  pinMode(buttonDown, INPUT_PULLUP);
+  pinMode(buttonLeft, INPUT_PULLUP);
+  pinMode(buttonRight, INPUT_PULLUP);
+  pinMode(buttonReset, INPUT_PULLUP);
+
+  // Communication série (pour debug)
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Gestion de la vitesse
+  if (digitalRead(buttonUp) == LOW) {
+    motorSpeed += 1;
+    if (motorSpeed > 15) motorSpeed = 15; // Limite haute
+    myStepper.setSpeed(motorSpeed);
+    Serial.print("Vitesse augmentée: ");
+    Serial.println(motorSpeed);
+    delay(200);
+  }
+
+  if (digitalRead(buttonDown) == LOW) {
+    motorSpeed -= 1;
+    if (motorSpeed < 1) motorSpeed = 1; // Limite basse
+    myStepper.setSpeed(motorSpeed);
+    Serial.print("Vitesse diminuée: ");
+    Serial.println(motorSpeed);
+    delay(200);
+  }
+
+  // Gestion de la direction
+  if (digitalRead(buttonLeft) == LOW) {
+    motorDirection = -1;
+    Serial.println("Rotation continue gauche...");
+    delay(200);
+  }
+
+  if (digitalRead(buttonRight) == LOW) {
+    motorDirection = 1;
+    Serial.println("Rotation continue droite...");
+    delay(200);
+  }
+
+  // Gestion du reset
+  if (digitalRead(buttonReset) == LOW) {
+    motorDirection = 0;
+    Serial.println("Moteur arrêté.");
+    delay(200);
+  }
+
+  // Faire tourner le moteur selon la direction choisie
+  if (motorDirection == 1) {
+    myStepper.step(1); // Tourner petit pas à droite
+  }
+  else if (motorDirection == -1) {
+    myStepper.step(-1); // Tourner petit pas à gauche
+  }
+}
+````
