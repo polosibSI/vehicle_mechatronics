@@ -94,7 +94,7 @@ void loop() {
 ```
 For me, the motor only turn in one way.
 
-Code pour piloter le moteur avec un bouton directionnel :
+Code to pilot the stepper motor with a directional button :
 ```
 #include <Stepper.h>
 
