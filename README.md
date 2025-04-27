@@ -93,3 +93,68 @@ void loop() {
 }
 ```
 For me, the motor only turn in one way.
+
+Code pour piloter le moteur avec un bouton directionnel :
+```
+#include <Stepper.h>
+
+// Nombre de pas pour une révolution complète
+const int stepsPerRevolution = 2048;
+
+// Définir les pins du moteur (IN1-IN2-IN3-IN4)
+Stepper myStepper(stepsPerRevolution, 8, 10, 9, 11);
+
+// Définir les pins des boutons
+const int buttonUp = 2;
+const int buttonDown = 3;
+const int buttonLeft = 4;
+const int buttonRight = 5;
+
+int motorSpeed = 10; // Vitesse de départ (RPM)
+
+void setup() {
+  // Initialisation du moteur
+  myStepper.setSpeed(motorSpeed);
+
+  // Initialisation des boutons
+  pinMode(buttonUp, INPUT_PULLUP);
+  pinMode(buttonDown, INPUT_PULLUP);
+  pinMode(buttonLeft, INPUT_PULLUP);
+  pinMode(buttonRight, INPUT_PULLUP);
+
+  // Communication série (pour debug)
+  Serial.begin(9600);
+}
+
+void loop() {
+  if (digitalRead(buttonUp) == LOW) { // Bouton appuyé (LOW car INPUT_PULLUP)
+    motorSpeed += 1;
+    if (motorSpeed > 30) motorSpeed = 30; // Limite max
+    myStepper.setSpeed(motorSpeed);
+    Serial.print("Vitesse augmentée: ");
+    Serial.println(motorSpeed);
+    delay(200); // Anti-rebond
+  }
+
+  if (digitalRead(buttonDown) == LOW) {
+    motorSpeed -= 1;
+    if (motorSpeed < 1) motorSpeed = 1; // Limite min
+    myStepper.setSpeed(motorSpeed);
+    Serial.print("Vitesse diminuée: ");
+    Serial.println(motorSpeed);
+    delay(200);
+  }
+
+  if (digitalRead(buttonLeft) == LOW) {
+    Serial.println("Rotation gauche...");
+    myStepper.step(-stepsPerRevolution / 8); // Petit mouvement à gauche
+    delay(200);
+  }
+
+  if (digitalRead(buttonRight) == LOW) {
+    Serial.println("Rotation droite...");
+    myStepper.step(stepsPerRevolution / 8); // Petit mouvement à droite
+    delay(200);
+  }
+}
+````
